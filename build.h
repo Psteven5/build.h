@@ -254,6 +254,8 @@ static inline int build_lib(char const *restrict target, struct build_lib args)
                         return EXIT_SUCCESS;
         if (NULL == args.compiler)
                 args.compiler = "cc";
+        else if (0 == strcmp("cl", args.compiler))
+                args.is_msvc = 1;
 #ifdef _WIN32
         build_buffer_appendf_("\"");
 #endif
@@ -291,6 +293,8 @@ static inline int build_exe(char const *restrict target, struct build_exe args)
                         return EXIT_SUCCESS;
         if (NULL == args.compiler)
                 args.compiler = "cc";
+        else if (0 == strcmp("cl", args.compiler))
+                args.is_msvc = 1;
 #ifdef _WIN32
         build_buffer_appendf_("\"");
 #endif
