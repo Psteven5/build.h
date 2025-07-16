@@ -92,17 +92,17 @@ static inline void build_buffer_appendf_(char const *restrict fmt, ...)
 {
         va_list args;
         va_start(args, fmt);
-                unsigned const count =
-                #ifdef _WIN32
-                        _vscprintf(fmt, args);
-                #else
-                        vsnprintf(NULL, 0, fmt, args);
-                #endif
+        unsigned const count =
+        #ifdef _WIN32
+                _vscprintf(fmt, args);
+        #else
+                vsnprintf(NULL, 0, fmt, args);
+        #endif
         va_end(args);
         build_buffer_reserve_(count + build_buffer_.count);
         va_start(args, fmt);
-                vsnprintf(build_buffer_.data + build_buffer_.count,
-                        build_buffer_.capacity - build_buffer_.count, fmt, args);
+        vsnprintf(build_buffer_.data + build_buffer_.count,
+                build_buffer_.capacity - build_buffer_.count, fmt, args);
         va_end(args);
         build_buffer_.count += count;
 }
@@ -119,24 +119,23 @@ static inline void build_full_path_ (
         if (target == strstr(target, "./")
 #ifdef _WIN32
          || target == strstr(target, ".\\")
-        ) {
+        )
                 build_buffer_appendf_("%s\\%s", src_dir, 2 + target);
 #else
-        ) {
+        )
                 build_buffer_appendf_("%s/%s", src_dir, 2 + target);
 #endif
-        } else if (target == strstr(target, "../")
+        else if (target == strstr(target, "../")
 #ifdef _WIN32
-         || target == strstr(target, "..\\")
-        ) {
+              || target == strstr(target, "..\\")
+        )
                 build_buffer_appendf_("%s\\%s", src_dir, target);
 #else
-        ) {
+        )
                 build_buffer_appendf_("%s/%s", src_dir, target);
 #endif
-        } else {
+        else
                 build_buffer_appendf_("%s", target);
-        }
 #ifdef _WIN32
         for (; i != build_buffer_.count; ++i)
                 if ('/' == build_buffer_.data[i])
@@ -278,9 +277,9 @@ static inline int build_lib(char const *restrict target, struct build_lib args)
                 else
                         build_buffer_appendf_(" -shared");
         build_base_(target, args.src_dir, args.flags,
-                args.inc_dirs,  args.srcs,
-                args.lib_dirs,  args.libs,
-                args.is_msvc,   args.is_silent);
+                args.inc_dirs, args.srcs,
+                args.lib_dirs, args.libs,
+                args.is_msvc,  args.is_silent);
         build_buffer_.count = 0;
         return system(build_buffer_.data);
 }
@@ -312,9 +311,9 @@ static inline int build_exe(char const *restrict target, struct build_exe args)
         else if (args.is_static)
                 build_buffer_appendf_(" -static");
         build_base_(target, args.src_dir, args.flags,
-                args.inc_dirs,  args.srcs,
-                args.lib_dirs,  args.libs,
-                args.is_msvc,   args.is_silent);
+                args.inc_dirs, args.srcs,
+                args.lib_dirs, args.libs,
+                args.is_msvc,  args.is_silent);
         build_buffer_.count = 0;
         return system(build_buffer_.data);
 }
