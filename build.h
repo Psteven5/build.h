@@ -9,6 +9,10 @@
 
 #ifdef _WIN32
         #include <windows.h>
+
+        #define BUILD_EXTENSION ".exe"
+#else
+        #define BUILD_EXTENSION
 #endif
 
 #ifdef _MSC_VER
@@ -322,12 +326,6 @@ static inline int build_exe(char const *restrict target, struct build_exe args)
         return system(build_buffer_.data);
 }
 
-#ifdef _WIN32
-        #define BUILD_EXTENSION_ ".exe"
-#else
-        #define BUILD_EXTENSION_
-#endif
-
 static inline int build_refresh (
         char const *restrict target,
         struct build_exe     args)
@@ -335,8 +333,8 @@ static inline int build_refresh (
         if (build_up_to_date(target, args.src_dir, args.deps))
                 return EXIT_SUCCESS;
         args.deps = NULL;
-        remove(        ".build" BUILD_EXTENSION_);
-        rename(target, ".build" BUILD_EXTENSION_);
+        remove(        ".build" BUILD_EXTENSION);
+        rename(target, ".build" BUILD_EXTENSION);
         int const status = build_exe(target, args);
         if (status)
                 return status;
@@ -359,8 +357,6 @@ static inline int build_refresh (
         system(build_buffer_.data);
         return EXIT_FAILURE;
 }
-
-#undef BUILD_EXTENSION_
 
 #ifdef BUILD_IMPLEMENTATION
         struct build_buffer_ build_buffer_;
