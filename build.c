@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
                 .srcs     = BUILD_LIST(__FILE__),
         })) return EXIT_SUCCESS;
         
-        build_lib("./lib/hello" BUILD_OBJ, (struct build_lib) {
+        build_lib("./lib/hello" BUILD_SHARED, (struct build_lib) {
                 .src_dir  = src_dir,
                 .deps     = BUILD_LIST("./src/hello.c", "./build" BUILD_EXE),
                 .inc_dirs = BUILD_LIST("./include"),
@@ -33,9 +33,10 @@ int main(int argc, char *argv[])
         
         build_exe("./bin/main" BUILD_EXE, (struct build_exe) {
                 .src_dir  = src_dir,
-                .deps     = BUILD_LIST("./src/main.c", "./lib/hello" BUILD_OBJ),
+                .deps     = BUILD_LIST("./src/main.c", "./lib/hello" BUILD_SHARED),
                 .compiler = CC,
                 .inc_dirs = BUILD_LIST("./include"),
-                .srcs     = BUILD_LIST("./lib/hello" BUILD_OBJ, "./src/main.c"),
+                .srcs     = BUILD_LIST("./src/main.c"),
+                .libs     = BUILD_LIST("./lib/hello" BUILD_SHARED),
         });
 }
