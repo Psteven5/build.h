@@ -10,9 +10,15 @@
 #ifdef _WIN32
         #include <windows.h>
 
-        #define BUILD_EXTENSION ".exe"
+        #define BUILD_EXE    ".exe"
+        #define BUILD_OBJ    ".obj"
+        #define BUILD_SHARED ".dll"
+        #define BUILD_STATIC ".a"
 #else
-        #define BUILD_EXTENSION
+        #define BUILD_EXE
+        #define BUILD_OBJ    ".o"
+        #define BUILD_SHARED ".so"
+        #define BUILD_STATIC ".a"
 #endif
 
 #ifdef _MSC_VER
@@ -333,8 +339,8 @@ static inline int build_refresh (
         if (build_up_to_date(target, args.src_dir, args.deps))
                 return EXIT_SUCCESS;
         args.deps = NULL;
-        remove(        ".build" BUILD_EXTENSION);
-        rename(target, ".build" BUILD_EXTENSION);
+        remove(        ".build" BUILD_EXE);
+        rename(target, ".build" BUILD_EXE);
         int const status = build_exe(target, args);
         if (status)
                 return status;
