@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
                 .srcs     = BUILD_LIST("./src/hello.c"),
         });
         
-        build_exe("./bin/main", (struct build_exe) {
+        build_exe("./bin/main" BUILD_EXTENSION, (struct build_exe) {
                 .src_dir  = src_dir,
                 .deps     = BUILD_LIST("./src/main.c", "./lib/hello.o"),
                 .compiler = CC,
