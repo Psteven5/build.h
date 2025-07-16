@@ -5,56 +5,40 @@ Simple single header build system inspired by nobuild functionality
 #define BUILD_IMPLEMENTATION
 #include "build.h"
 
+#ifdef _WIN32
+  #define CC "cl"
+#else
+  #define CC "cc"
+#endif
+
 int main(int argc, char *argv[])
 {
-        char *const result = strrchr(argv[0], '/');
-        if (NULL != result)
-                *result = '\0';
-        char const *const src_dir = argv[0];
+  char *const result = strrchr(argv[0], '/');
+  if (NULL != result)
+    *result = '\0';
+  char const *const src_dir = argv[0];
+  
+  if (build_refresh("./build", (struct build_exe) {
+    .src_dir  = src_dir,
+    .deps     = BUILD_LIST(__FILE__),
+    .compiler = CC,
+    .srcs     = BUILD_LIST(__FILE__),
+  })) return EXIT_SUCCESS;
 
-#ifdef _WIN32
-        #define CC "cl"
-#else
-        #define CC "cc"
-#endif
-
-#define TARGET_BUILD "./build"
-        #define TARGET_SRCS "./build.c"
-                if (build_refresh("./build", (struct build_exe) {
-                        .src_dir  = src_dir,
-                        .deps     = BUILD_LIST(TARGET_SRCS),
-                        .compiler = CC,
-                        .srcs     = BUILD_LIST(TARGET_SRCS),
-                })) return EXIT_SUCCESS;
-        #undef TARGET_SRCS
-#undef
-
-#ifdef _WIN32
-        #define TARGET_HELLO "./lib/hello.obj"
-#else
-        #define TARGET_HELLO "./lib/hello.o"
-#endif
-        #define TARGET_SRCS "./src/hello.c"
-                build_lib(TARGET_HELLO, (struct build_lib) {
-                        .src_dir  = src_dir,
-                        .deps     = BUILD_LIST(TARGET_BUILD, TARGET_SRCS),
-                        .inc_dirs = BUILD_LIST("./include"),
-                        .compiler = CC,
-                        .srcs     = BUILD_LIST(TARGET_SRCS),
-                });
-        #undef TARGET_SRCS
-#undef
-
-#define TARGET_MAIN "./bin/main"
-        #define TARGET_SRCS "./lib/hello.o", "./src/main.c"
-                build_exe(TARGET_MAIN, (struct build_exe) {
-                        .src_dir  = src_dir,
-                        .deps     = BUILD_LIST(TARGET_SRCS),
-                        .compiler = CC,
-                        .inc_dirs = BUILD_LIST("./include"),
-                        .srcs     = BUILD_LIST(TARGET_SRCS),
-                });
-        #undef TARGET_SRCS
-#undef
+  build_lib("./lib/hello.o", (struct build_lib) {
+    .src_dir  = src_dir,
+    .deps     = BUILD_LIST("./src/hello.c", "./build"),
+    .inc_dirs = BUILD_LIST("./include"),
+    .compiler = CC,
+    .srcs     = BUILD_LIST("./src/hello.c),
+  });
+  
+  build_exe("./bin/main", (struct build_exe) {
+    .src_dir  = src_dir,
+    .deps     = BUILD_LIST("./src/main.c", "./lib/hello.o"),
+    .compiler = CC,
+    .inc_dirs = BUILD_LIST("./include"),
+    .srcs     = BUILD_LIST("./src/main.c"),
+  });
 }
 ```
