@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
                 .deps     = BUILD_LIST("./src/hello.c", "./build"),
                 .inc_dirs = BUILD_LIST("./include"),
                 .compiler = CC,
-                .srcs     = BUILD_LIST("./src/hello.c),
+                .srcs     = BUILD_LIST("./src/hello.c"),
         });
         
         build_exe("./bin/main", (struct build_exe) {
