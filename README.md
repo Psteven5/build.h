@@ -20,27 +20,27 @@ int main(int argc, char *argv[])
                 src_dir = argv[0];
         }
         
-        if (build_refresh("./build" BUILD_EXTENSION, (struct build_exe) {
+        if (build_refresh("./build" BUILD_EXE, (struct build_exe) {
                 .src_dir  = src_dir,
                 .deps     = BUILD_LIST(__FILE__),
                 .compiler = CC,
                 .srcs     = BUILD_LIST(__FILE__),
         })) return EXIT_SUCCESS;
         
-        build_lib("./lib/hello.o", (struct build_lib) {
+        build_lib("./lib/hello" BUILD_OBJ, (struct build_lib) {
                 .src_dir  = src_dir,
-                .deps     = BUILD_LIST("./src/hello.c", "./build" BUILD_EXTENSION),
+                .deps     = BUILD_LIST("./src/hello.c", "./build" BUILD_EXE),
                 .inc_dirs = BUILD_LIST("./include"),
                 .compiler = CC,
                 .srcs     = BUILD_LIST("./src/hello.c"),
         });
         
-        build_exe("./bin/main" BUILD_EXTENSION, (struct build_exe) {
+        build_exe("./bin/main" BUILD_EXE, (struct build_exe) {
                 .src_dir  = src_dir,
-                .deps     = BUILD_LIST("./src/main.c", "./lib/hello.o"),
+                .deps     = BUILD_LIST("./src/main.c", "./lib/hello" BUILD_OBJ),
                 .compiler = CC,
                 .inc_dirs = BUILD_LIST("./include"),
-                .srcs     = BUILD_LIST("./lib/hello.o", "./src/main.c"),
+                .srcs     = BUILD_LIST("./lib/hello" BUILD_OBJ, "./src/main.c"),
         });
 }
 ```
