@@ -10,9 +10,11 @@
 int main(int argc, char *argv[])
 {
         char *const result = strrchr(argv[0], '/');
-        if (NULL != result)
+        char const *src_dir = ".";
+        if (NULL != result) {
                 *result = '\0';
-        char const *const src_dir = argv[0];
+                src_dir = argv[0];
+        }
         
         if (build_refresh("./build" BUILD_EXTENSION, (struct build_exe) {
                 .src_dir  = src_dir,
