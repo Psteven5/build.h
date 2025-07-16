@@ -3,9 +3,6 @@
 
 #include <stdio.h>
 
-void hello(char const *restrict subj)
-{
-        printf("Hello, %s!\n", subj);
-}
+void hello(char const *restrict subj);
 
 #endif
