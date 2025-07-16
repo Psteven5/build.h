@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
                 .deps     = BUILD_LIST("./src/main.c", "./lib/hello.o"),
                 .compiler = CC,
                 .inc_dirs = BUILD_LIST("./include"),
-                .srcs     = BUILD_LIST("./src/main.c"),
+                .srcs     = BUILD_LIST("./lib/hello.o", "./src/main.c"),
         });
 }
 ```
